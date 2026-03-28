@@ -1,41 +1,45 @@
 trigger: none
 
 pool:
-  name: self-hosted
+  name: self-hosted   # or your vmss pool
 
 steps:
 
 - checkout: self
 
+# Install Terraform
 - task: TerraformInstaller@1
   inputs:
     terraformVersion: '1.5.7'
 
+# Terraform Init
 - task: TerraformTaskV4@4
   displayName: "Terraform Init"
   inputs:
     provider: 'azurerm'
     command: 'init'
-    workingDirectory: 'terraform'
+    workingDirectory: '.'
     backendServiceArm: 'azure-service-connection'
     backendAzureRmResourceGroupName: 'rgp-tddev-de-ci-dat-01'
-    backendAzureRmStorageAccountName: 'tddevtfstate123'
+    backendAzureRmStorageAccountName: '<storage-account>'
     backendAzureRmContainerName: 'tfstate'
     backendAzureRmKey: 'aks.tfstate'
 
+# Terraform Plan
 - task: TerraformTaskV4@4
   displayName: "Terraform Plan"
   inputs:
     provider: 'azurerm'
     command: 'plan'
-    workingDirectory: ''
+    workingDirectory: '.'
     environmentServiceNameAzureRM: 'azure-service-connection'
 
+# Terraform Apply
 - task: TerraformTaskV4@4
   displayName: "Terraform Apply"
   inputs:
     provider: 'azurerm'
     command: 'apply'
-    workingDirectory: 'terraform'
+    workingDirectory: '.'
     environmentServiceNameAzureRM: 'azure-service-connection'
     commandOptions: '-auto-approve'
