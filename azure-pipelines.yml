@@ -28,7 +28,7 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'plan'
-    workingDirectory: 'terraform'
+    workingDirectory: ''
     environmentServiceNameAzureRM: 'azure-service-connection'
 
 - task: TerraformTaskV4@4
